@@ -1,7 +1,8 @@
+import ListarLanches from "@/components/ListarLanches"
 export default function ListLanches(){
     return(
         <main>
-            <ListLanches/>
+            <ListarLanches/>
         </main>
     )
 }

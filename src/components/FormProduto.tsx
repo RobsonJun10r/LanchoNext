@@ -52,7 +52,7 @@ const CadastrarProdutos = () => {
         });
       }
     } else {
-      // Criar novo produto
+
       const response = await fetch("https://gustavomoreirase.pythonanywhere.com/ingrediente/", {
         method: 'POST',
         headers: {
@@ -92,6 +92,8 @@ const CadastrarProdutos = () => {
       />
       <h1 style={titleStyle}>{id ? 'Editar Produto' : 'Cadastrar Produto'}</h1>
       <form onSubmit={handleSubmit} style={formStyle}>
+        <label>
+          Nome do Produto
         <input
           type="text"
           value={nome}
@@ -99,13 +101,14 @@ const CadastrarProdutos = () => {
           placeholder="Nome do produto"
           style={inputStyle}
         />
+        </label>
         <button type="submit" style={buttonStyle}>{id ? 'Salvar' : 'Cadastrar'}</button>
       </form>
     </div>
   );
 };
 
-// CSS Styles
+
 const containerStyle: React.CSSProperties = {
   padding: '20px',
   backgroundColor: '#f8f9fa',

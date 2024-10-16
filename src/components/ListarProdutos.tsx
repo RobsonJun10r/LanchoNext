@@ -5,8 +5,12 @@ import Link from 'next/link';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+interface Produto{
+  id_ingrediente: number;
+  nome_ingrediente: string;
+}
 const ListarProdutos = () => {
-  const [produtos, setProdutos] = useState<any[]>([]);
+  const [produtos, setProdutos] = useState<Produto[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
 
@@ -71,7 +75,7 @@ const ListarProdutos = () => {
 
    
       <div style={filterContainerStyle}>
-        <label style={filterLabelStyle}>Filtro</label>
+        <label style={filterLabelStyle}>Filtro de Produtos</label>
         <input 
           type="text" 
           placeholder="Pesquisar produto" 
