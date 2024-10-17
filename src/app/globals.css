@@ -37,3 +37,22 @@ button{
     font-family: 'Poppins', sans-serif;
   }
   
+  .card{
+    display: inline-block;
+    margin: 20px;
+  }
+
+  .home{
+    margin: 25px;
+  }
+
+  .containerPage{
+    background-color: #ffffff;
+    padding: 20px;
+    margin: 20px;
+   
+    -webkit-box-shadow: 0px -1px 12px -3px rgba(167,0,0,1);
+   -moz-box-shadow: 0px -1px 12px -3px rgba(167,0,0,1);
+    box-shadow: 0px -1px 12px -3px rgba(167,0,0,1);  
+  }
+
