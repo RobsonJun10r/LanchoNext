@@ -13,11 +13,10 @@ button{
     border: none;
     text-decoration: none;
     padding: 15px;
-    border-radius: 10px;
     color: #F7F7F7;
     
 } button:hover {
-    background: #888;
+    background: #88888879;
 }
 
 @font-face {

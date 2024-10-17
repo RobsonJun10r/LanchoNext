@@ -1,78 +1,152 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSearchParams } from 'next/navigation'; // Para capturar os parâmetros da URL
 
-const CadastrarLanche: React.FC = () => {
-  const router = useRouter();
-  const [nomeLanche, setNomeLanche] = useState<string>('');
-  const [valorLanche, setValorLanche] = useState<string>('');
+interface Ingrediente {
+  idIngrediente: string;
+  quantidade: string;
+}
 
-  const handleSubmitLanche = async (e: React.FormEvent) => {
+interface Lanche {
+  id_lanche: string;
+  nome_lanche: string;
+}
+
+interface IngredienteData {
+  id_ingrediente: string;
+  nome_ingrediente: string;
+}
+
+const VincularIngredientes: React.FC = () => {
+  const [lanches, setLanches] = useState<Lanche[]>([]); 
+  const [ingredientes, setIngredientes] = useState<IngredienteData[]>([]); 
+  const [selectedLancheId, setSelectedLancheId] = useState<string>('');
+  const [ingredientesSelecionados, setIngredientesSelecionados] = useState<Ingrediente[]>([{ idIngrediente: '', quantidade: '' }]);
+  
+  const searchParams = useSearchParams(); 
+  const lancheIdFromURL = searchParams.get('id'); 
+
+  // Buscar os lanches
+  useEffect(() => {
+    const fetchLanches = async () => {
+      const response = await fetch('https://gustavomoreirase.pythonanywhere.com/lanche/');
+      const data: Lanche[] = await response.json();
+      setLanches(data); 
+      
+      // Se um lanche foi passado pela URL, definir como o lanche selecionado
+      if (lancheIdFromURL) {
+        setSelectedLancheId(lancheIdFromURL);
+      }
+    };
+    fetchLanches();
+  }, [lancheIdFromURL]);
+
+  // Buscar os ingredientes
+  useEffect(() => {
+    const fetchIngredientes = async () => {
+      const response = await fetch('https://gustavomoreirase.pythonanywhere.com/ingrediente/');
+      const data: IngredienteData[] = await response.json();
+      setIngredientes(data); 
+    };
+    fetchIngredientes();
+  }, []);
+
+  const handleAddIngrediente = () => {
+    setIngredientesSelecionados([...ingredientesSelecionados, { idIngrediente: '', quantidade: '' }]);
+  };
+
+  const handleIngredienteChange = (index: number, field: keyof Ingrediente, value: string) => {
+    const newIngredientes = [...ingredientesSelecionados];
+    newIngredientes[index][field] = value;
+    setIngredientesSelecionados(newIngredientes);
+  };
+
+  const handleSubmitVinculo = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!nomeLanche || !valorLanche) {
-      toast.error('Nome e valor do lanche são obrigatórios!', { position: "top-right", autoClose: 2000, hideProgressBar: true });
+    if (!selectedLancheId) {
+      toast.error('Selecione um lanche!', { position: "top-right", autoClose: 2000, hideProgressBar: true });
       return;
     }
 
     try {
-      const precoFormatado = parseFloat(valorLanche).toFixed(2);
+      for (const ingrediente of ingredientesSelecionados) {
+        if (!ingrediente.idIngrediente || !ingrediente.quantidade) {
+          toast.error('Todos os ingredientes devem ter um ID e quantidade!', { position: "top-right", autoClose: 2000, hideProgressBar: true });
+          continue;
+        }
 
-      const responseLanche = await fetch('https://gustavomoreirase.pythonanywhere.com/lanche/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          nome_lanche: nomeLanche,
-          preco_lanche: precoFormatado
-        }),
-      });
+        const response = await fetch('https://gustavomoreirase.pythonanywhere.com/lanches_ingredientes/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id_lanche: selectedLancheId,
+            id_ingrediente: ingrediente.idIngrediente,
+            quantidade: ingrediente.quantidade,
+          }),
+        });
 
-      if (!responseLanche.ok) throw new Error('Erro ao cadastrar lanche');
+        if (!response.ok) throw new Error('Erro ao vincular ingrediente');
+      }
 
-      toast.success('Lanche cadastrado com sucesso!', { position: "top-right", autoClose: 2000, hideProgressBar: true });
-      router.push('/ListarLanches');
+      toast.success('Ingredientes vinculados com sucesso!', { position: "top-right", autoClose: 2000, hideProgressBar: true });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      toast.error('Erro ao cadastrar lanche!', { position: "top-right", autoClose: 2000, hideProgressBar: true });
+      toast.error('Erro ao vincular ingredientes!', { position: "top-right", autoClose: 2000, hideProgressBar: true });
     }
   };
 
   return (
     <div style={containerStyle}>
       <ToastContainer style={{ fontSize: '14px', width: 'auto' }} position="top-right" autoClose={2000} hideProgressBar closeOnClick pauseOnHover draggable />
+      <h1 style={titleStyle}>Vincular Ingredientes ao Lanche</h1>
+      <form onSubmit={handleSubmitVinculo} style={formStyle}>
+        {/* Seleção do lanche com preenchimento automático via URL */}
+        <select value={selectedLancheId} onChange={(e) => setSelectedLancheId(e.target.value)} style={inputStyle}>
+          <option value="">Selecione um Lanche</option>
+          {lanches.map((lanche) => (
+            <option key={lanche.id_lanche} value={lanche.id_lanche}>
+              {lanche.nome_lanche}
+            </option>
+          ))}
+        </select>
 
-      <h1 style={titleStyle}>Cadastrar Lanche</h1>
-      <form onSubmit={handleSubmitLanche} style={formStyle}>
-        <label>
-          Nome do Lanche
-          <input
-            type="text"
-            value={nomeLanche}
-            onChange={(e) => setNomeLanche(e.target.value)}
-            placeholder="Nome do Lanche"
-            style={inputStyle}
-          />
-        </label>
-        <label>
-          Valor do Lanche
-          <input
-            type="text"
-            value={valorLanche}
-            onChange={(e) => setValorLanche(e.target.value)}
-            placeholder="Valor do Lanche"
-            style={inputStyle}
-          />
-        </label>
-        <button type="submit" style={buttonStyle}>Cadastrar Lanche</button>
+        {ingredientesSelecionados.map((ingrediente, index) => (
+          <div key={index} style={ingredienteRowStyle}>
+            <select
+              value={ingrediente.idIngrediente}
+              onChange={(e) => handleIngredienteChange(index, 'idIngrediente', e.target.value)}
+              style={inputStyle}
+            >
+              <option value="">Selecione um Ingrediente</option>
+              {ingredientes.map((ingredienteItem) => (
+                <option key={ingredienteItem.id_ingrediente} value={ingredienteItem.id_ingrediente}>
+                  {ingredienteItem.nome_ingrediente}
+                </option>
+              ))}
+            </select>
+            <input
+              type="number"
+              value={ingrediente.quantidade}
+              onChange={(e) => handleIngredienteChange(index, 'quantidade', e.target.value)}
+              placeholder="Quantidade"
+              style={inputStyle}
+            />
+          </div>
+        ))}
+
+        <button type="button" onClick={handleAddIngrediente} style={buttonStyle}>Adicionar Ingrediente</button>
+        <button type="submit" style={buttonStyle}>Vincular Ingredientes</button>
       </form>
     </div>
   );
 };
 
+// Estilos
 const containerStyle: React.CSSProperties = {
   padding: '20px',
   backgroundColor: '#f8f9fa',
@@ -109,4 +183,10 @@ const buttonStyle: React.CSSProperties = {
   cursor: 'pointer',
 };
 
-export default CadastrarLanche;
+const ingredienteRowStyle: React.CSSProperties = {
+  display: 'flex',
+  gap: '10px',
+  marginBottom: '10px',
+};
+
+export default VincularIngredientes;
