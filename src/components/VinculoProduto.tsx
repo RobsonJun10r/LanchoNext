@@ -71,13 +71,18 @@ const VincularIngredientes: React.FC = () => {
       return;
     }
 
-    try {
-      for (const ingrediente of ingredientesSelecionados) {
-        if (!ingrediente.idIngrediente || !ingrediente.quantidade) {
-          toast.error('Todos os ingredientes devem ter um ID e quantidade!', { position: "top-right", autoClose: 2000, hideProgressBar: true });
-          continue;
-        }
+    // Filtrar ingredientes que têm ID e quantidade preenchidos
+    const ingredientesValidos = ingredientesSelecionados.filter(
+      (ingrediente) => ingrediente.idIngrediente && ingrediente.quantidade
+    );
 
+    if (ingredientesValidos.length === 0) {
+      toast.error('Preencha os ingredientes corretamente!', { position: "top-right", autoClose: 2000, hideProgressBar: true });
+      return;
+    }
+
+    try {
+      for (const ingrediente of ingredientesValidos) {
         const response = await fetch('https://gustavomoreirase.pythonanywhere.com/lanches_ingredientes/', {
           method: 'POST',
           headers: {

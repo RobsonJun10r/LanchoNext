@@ -36,8 +36,8 @@ const ListarLanches = () => {
     lanche.nome_lanche && lanche.nome_lanche.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleEdit = (id: number, nome: string) => {
-    router.push(`/CadastrarLanches?id=${id}&nome=${encodeURIComponent(nome)}`);
+  const handleEdit = (id: number) => {
+    router.push(`/CadastrarLanches?id=${id}`); 
   };
 
   const handleDelete = async (id: number) => {
@@ -113,7 +113,7 @@ const ListarLanches = () => {
             </span>
             <div style={actionIconsStyle}>
               <span style={iconStyle} onClick={() => handleVinculo(lanche.id_lanche)}>🔗</span>
-              <span style={iconStyle} onClick={() => handleEdit(lanche.id_lanche, lanche.nome_lanche)}>✏️</span>
+              <span style={iconStyle} onClick={() => handleEdit(lanche.id_lanche)}>✏️</span>
               <span style={iconStyle} onClick={() => handleDelete(lanche.id_lanche)}>🗑️</span>
             </div>
           </div>
@@ -122,8 +122,6 @@ const ListarLanches = () => {
     </div>
   );
 };
-
-
 
 const containerStyle: React.CSSProperties = {
   padding: '20px',
@@ -182,17 +180,17 @@ const listContainerStyle: React.CSSProperties = {
 
 const listHeaderStyle: React.CSSProperties = {
   display: 'grid',
-  gridTemplateColumns: '2fr 3fr 1fr 1fr', // Ajuste para manter as colunas alinhadas
+  gridTemplateColumns: '2fr 3fr 1fr 1fr',
   fontWeight: 'bold',
   paddingBottom: '10px',
   borderBottom: '2px solid #e1e1e1',
-  textAlign: 'center', // Alinha os cabeçalhos no centro
+  textAlign: 'center',
   gap: '10px',
 };
 
 const itemStyle: React.CSSProperties = {
   display: 'grid',
-  gridTemplateColumns: '2fr 3fr 1fr 1fr', // Ajuste das colunas para manter alinhamento
+  gridTemplateColumns: '2fr 3fr 1fr 1fr',
   alignItems: 'center',
   padding: '10px',
   borderBottom: '1px solid #e1e1e1',
@@ -208,13 +206,13 @@ const nameStyle: React.CSSProperties = {
 };
 
 const ingredientesStyle: React.CSSProperties = {
-  textAlign: 'center', // Ingredientes à esquerda
+  textAlign: 'center',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
 };
 
 const valorStyle: React.CSSProperties = {
-  textAlign: 'center', // Valor alinhado à direita
+  textAlign: 'center',
 };
 
 const actionIconsStyle: React.CSSProperties = {

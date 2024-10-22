@@ -4,7 +4,9 @@ export default function Home() {
   return (
     <div className="containerPage">
       <div>
+        <div className="title">
         <h1 className="home">DATALANCHES</h1>
+        </div>
         <div className="card">
           <Link href="/ListarLanches">
             <Image
