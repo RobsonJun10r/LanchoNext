@@ -165,7 +165,7 @@ const filterLabelStyle: React.CSSProperties = {
 const searchInputStyle: React.CSSProperties = {
   padding: '8px',
   width: '100%',
-  maxWidth: '400px',
+  maxWidth: '360px',
   borderRadius: '5px',
   border: '1px solid #ddd',
 };

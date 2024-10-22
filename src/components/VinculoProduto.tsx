@@ -110,7 +110,7 @@ const VincularIngredientes: React.FC = () => {
       <ToastContainer style={{ fontSize: '14px', width: 'auto' }} position="top-right" autoClose={2000} hideProgressBar closeOnClick pauseOnHover draggable />
       <h1 style={titleStyle}>Vincular Ingredientes ao Lanche</h1>
       <form onSubmit={handleSubmitVinculo} style={formStyle}>
-        {/* Seleção do lanche com preenchimento automático via URL */}
+       
         <select value={selectedLancheId} onChange={(e) => setSelectedLancheId(e.target.value)} style={inputStyle}>
           <option value="">Selecione um Lanche</option>
           {lanches.map((lanche) => (
@@ -151,7 +151,7 @@ const VincularIngredientes: React.FC = () => {
   );
 };
 
-// Estilos
+
 const containerStyle: React.CSSProperties = {
   padding: '20px',
   backgroundColor: '#f8f9fa',
