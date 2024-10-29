@@ -4,6 +4,9 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaPen } from 'react-icons/fa';
+import { FaRegTrashAlt } from "react-icons/fa";
+import { FaLink } from "react-icons/fa";
 
 interface Ingrediente {
   ingrediente: {
@@ -99,7 +102,8 @@ const ListarLanches = () => {
           <span style={headerColumnStyle}>Ingredientes</span>
           <span style={headerColumnStyle}>Valor</span>
           <span style={headerColumnStyle}>Ações</span>
-        </div>
+        </div >
+       
         {filteredLanches.map((lanche) => (
           <div key={lanche.id_lanche} style={itemStyle}>
             <span style={nameStyle}>{lanche.nome_lanche}</span>
@@ -112,12 +116,13 @@ const ListarLanches = () => {
               R$ {lanche.preco_lanche ? Number(lanche.preco_lanche).toFixed(2) : 'N/A'}
             </span>
             <div style={actionIconsStyle}>
-              <span style={iconStyle} onClick={() => handleVinculo(lanche.id_lanche)}>🔗</span>
-              <span style={iconStyle} onClick={() => handleEdit(lanche.id_lanche)}>✏️</span>
-              <span style={iconStyle} onClick={() => handleDelete(lanche.id_lanche)}>🗑️</span>
+              <span style={iconStyle} onClick={() => handleVinculo(lanche.id_lanche)}><FaLink style={{ color: '#002751'}} /></span>
+              <span style={iconStyle} onClick={() => handleEdit(lanche.id_lanche)}><FaPen style={{ color: '#FBC02D'}}/></span>
+              <span style={iconStyle} onClick={() => handleDelete(lanche.id_lanche)}><FaRegTrashAlt style={{ color: 'red'}}/></span>
             </div>
           </div>
         ))}
+ 
       </div>
     </div>
   );
@@ -221,9 +226,15 @@ const actionIconsStyle: React.CSSProperties = {
   gap: '10px',
 };
 
+
+
+
+
 const iconStyle: React.CSSProperties = {
   cursor: 'pointer',
-  fontSize: '18px',
+  fontSize: '20px',
 };
+
+
 
 export default ListarLanches;

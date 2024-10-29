@@ -4,16 +4,18 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaPen } from 'react-icons/fa';
+import { FaRegTrashAlt } from "react-icons/fa";
 
-interface Produto{
+interface Produto {
   id_ingrediente: number;
   nome_ingrediente: string;
 }
+
 const ListarProdutos = () => {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
-
 
   useEffect(() => {
     const fetchProdutos = async () => {
@@ -23,7 +25,6 @@ const ListarProdutos = () => {
     };
     fetchProdutos();
   }, []);
-
 
   const filteredProdutos = produtos.filter((produto) =>
     produto.nome_ingrediente.toLowerCase().includes(searchTerm.toLowerCase())
@@ -39,16 +40,16 @@ const ListarProdutos = () => {
     });
     if (response.ok) {
       setProdutos(prevProdutos => prevProdutos.filter(produto => produto.id_ingrediente !== id));
-      toast.success('Produto excluído com sucesso!', { 
-        position: "top-right", 
-        autoClose: 2000, 
+      toast.success('Produto excluído com sucesso!', {
+        position: "top-right",
+        autoClose: 2000,
         hideProgressBar: true,
         draggable: false,
       });
     } else {
-      toast.error('Erro ao excluir produto!', { 
-        position: "top-right", 
-        autoClose: 2000, 
+      toast.error('Erro ao excluir produto!', {
+        position: "top-right",
+        autoClose: 2000,
         hideProgressBar: true,
         draggable: false,
       });
@@ -57,7 +58,7 @@ const ListarProdutos = () => {
 
   return (
     <div style={containerStyle}>
-      <ToastContainer 
+      <ToastContainer
         style={{ fontSize: '14px', width: 'auto' }}
         position="top-right"
         autoClose={2000}
@@ -73,14 +74,13 @@ const ListarProdutos = () => {
         </Link>
       </div>
 
-   
       <div style={filterContainerStyle}>
         <label style={filterLabelStyle}>Filtro de Produtos</label>
-        <input 
-          type="text" 
-          placeholder="Pesquisar produto" 
+        <input
+          type="text"
+          placeholder="Pesquisar produto"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)} 
+          onChange={(e) => setSearchTerm(e.target.value)}
           style={searchInputStyle}
         />
       </div>
@@ -90,24 +90,26 @@ const ListarProdutos = () => {
           <label style={labelStyle}>Nome do produto</label>
           <span style={acoesLabelStyle}>Ações</span>
         </div>
-        {filteredProdutos.map((produto, index) => (
-          <div key={index} style={itemStyle}>
-            <span>{produto.nome_ingrediente}</span>
-            <div style={actionIconsStyle}>
-              <span style={iconStyle} onClick={() => handleEdit(produto.id_ingrediente, produto.nome_ingrediente)}>✏️</span>
-              <span style={iconStyle} onClick={() => handleDelete(produto.id_ingrediente)}>🗑️</span>
+     
+          {filteredProdutos.map((produto, index) => (
+            <div key={index} style={itemStyle}>
+              <span>{produto.nome_ingrediente}</span>
+              <div style={actionIconsStyle}>
+                <span style={iconStyle} onClick={() => handleEdit(produto.id_ingrediente, produto.nome_ingrediente)}><FaPen style={{ color: '#FBC02D'}} /></span>
+                <span style={iconStyle} onClick={() => handleDelete(produto.id_ingrediente)}><FaRegTrashAlt style={{ color: 'red'}} /></span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+  
       </div>
     </div>
   );
 };
 
-
 const containerStyle: React.CSSProperties = {
   padding: '20px',
-  backgroundColor: '#f8f9fa',
+  backgroundColor: '#fff',
+
 };
 
 const headerStyle: React.CSSProperties = {
@@ -118,10 +120,12 @@ const headerStyle: React.CSSProperties = {
   padding: '15px',
   color: '#fff',
   borderRadius: '5px',
+
 };
 
 const titleStyle: React.CSSProperties = {
   margin: 0,
+    
 };
 
 const newButtonStyle: React.CSSProperties = {
@@ -133,7 +137,6 @@ const newButtonStyle: React.CSSProperties = {
   cursor: 'pointer',
 };
 
-
 const filterContainerStyle: React.CSSProperties = {
   marginTop: '15px',
   marginBottom: '20px',
@@ -144,7 +147,6 @@ const filterLabelStyle: React.CSSProperties = {
   marginBottom: '5px',
   fontSize: '16px',
 };
-
 
 const searchInputStyle: React.CSSProperties = {
   padding: '8px',
@@ -178,7 +180,10 @@ const acoesLabelStyle: React.CSSProperties = {
   marginBottom: '10px',
   textAlign: 'center',
   width: '100px',
+
 };
+
+
 
 const itemStyle: React.CSSProperties = {
   display: 'flex',
@@ -197,7 +202,7 @@ const actionIconsStyle: React.CSSProperties = {
 
 const iconStyle: React.CSSProperties = {
   cursor: 'pointer',
-  fontSize: '18px',
+  fontSize: '20px',
 };
 
 export default ListarProdutos;

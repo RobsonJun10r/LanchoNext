@@ -17,8 +17,14 @@ const CadastrarLanche: React.FC = () => {
       return;
     }
 
+    const valorNumerico = parseFloat(valorLanche);
+    if (isNaN(valorNumerico) || valorNumerico <= 0) {
+      toast.error('O valor do lanche deve ser um número positivo!', { position: "top-right", autoClose: 2000, hideProgressBar: true });
+      return;
+    }
+
     try {
-      const precoFormatado = parseFloat(valorLanche).toFixed(2);
+      const precoFormatado = valorNumerico.toFixed(2);
 
       const responseLanche = await fetch('https://gustavomoreirase.pythonanywhere.com/lanche/', {
         method: 'POST',
@@ -35,9 +41,9 @@ const CadastrarLanche: React.FC = () => {
 
       toast.success('Lanche cadastrado com sucesso!', { position: "top-right", autoClose: 2000, hideProgressBar: true });
       router.push('/ListarLanches'); 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      toast.error('Erro ao cadastrar lanche!', { position: "top-right", autoClose: 2000, hideProgressBar: true });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(`Erro ao cadastrar lanche: ${error.message}`, { position: "top-right", autoClose: 2000, hideProgressBar: true });
     }
   };
 
@@ -45,28 +51,27 @@ const CadastrarLanche: React.FC = () => {
     <div style={containerStyle}>
       <ToastContainer style={{ fontSize: '14px', width: 'auto' }} position="top-right" autoClose={2000} hideProgressBar closeOnClick pauseOnHover draggable />
 
-
       <h1 style={titleStyle}>Cadastrar Lanche</h1>
       <form onSubmit={handleSubmitLanche} style={formStyle}>
         <label>
           Nome do Lanche
-        <input
-          type="text"
-          value={nomeLanche}
-          onChange={(e) => setNomeLanche(e.target.value)}
-          placeholder="Nome do Lanche"
-          style={inputStyle}
-        />
+          <input
+            type="text"
+            value={nomeLanche}
+            onChange={(e) => setNomeLanche(e.target.value)}
+            placeholder="Nome do Lanche"
+            style={inputStyle}
+          />
         </label>
         <label>
           Valor do Lanche
-        <input
-          type="text"
-          value={valorLanche}
-          onChange={(e) => setValorLanche(e.target.value)}
-          placeholder="Valor do Lanche"
-          style={inputStyle}
-        />
+          <input
+            type="text"
+            value={valorLanche}
+            onChange={(e) => setValorLanche(e.target.value)}
+            placeholder="Valor do Lanche"
+            style={inputStyle}
+          />
         </label>
         <button type="submit" style={buttonStyle}>Cadastrar Lanche</button>
       </form>
